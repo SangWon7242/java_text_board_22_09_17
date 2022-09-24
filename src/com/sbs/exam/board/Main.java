@@ -1,17 +1,22 @@
 package com.sbs.exam.board;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-
-/*
-[] /usr/article/detail 입력처리
-[] /usr/article/detail 입력되면 가장 최근 게시물 정보 노출
-*/
 
 public class Main {
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
     int articleLastId = 0;
     Article lastArticle = null;
+
+    List<Article> articles = new ArrayList<>();
+
+    // 테스트 데이터 3개 등록 시작
+    articles.add(new Article(1, "제목1", "내용1"));
+    articles.add(new Article(2, "제목2", "내용2"));
+    articles.add(new Article(3, "제목3", "내용3"));
+    // 테스트 데이터 3개 등록 끝
 
     System.out.println("== 게시판 v 0.1 ==");
     System.out.println("== 프로그램 시작 ==");
@@ -22,6 +27,16 @@ public class Main {
 
       if(cmd.equals("exit")) {
         break;
+      } else if (cmd.equals("/usr/article/list")) {
+        System.out.println("== 게시물 리스트 ==");
+        System.out.println("-------------------");
+        System.out.println("번호 / 제목");
+
+        for ( Article article : articles ) {
+          System.out.printf("%d / %s\n", article.id, article.title);
+        }
+
+        System.out.println("-------------------");
       } else if (cmd.equals("/usr/article/detail")) {
 
         if ( lastArticle == null ) {
