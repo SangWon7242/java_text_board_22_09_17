@@ -8,6 +8,7 @@ public class Main {
     articles.add(new Article(2, "제목2", "내용2"));
     articles.add(new Article(3, "제목3", "내용3"));
   }
+
   public static void main(String[] args) {
     Scanner sc = new Scanner(System.in);
     int articleLastId = 0;
@@ -16,48 +17,41 @@ public class Main {
 
     makeTestData(articles);
 
-    if ( articles.size() > 0) {
+    if (articles.size() > 0) {
       articleLastId = articles.get(articles.size() - 1).id;
     }
 
     System.out.println("== 게시판 v 0.1 ==");
     System.out.println("== 프로그램 시작 ==");
 
-    while(true) {
+    while (true) {
       System.out.printf("명령 ) ");
       String cmd = sc.nextLine();
 
       Rq rq = new Rq(cmd);
       Map<String, String> params = rq.getParams();
 
-      if(rq.getUrlPath().equals("exit")) {
+      if (rq.getUrlPath().equals("exit")) {
         break;
       } else if (rq.getUrlPath().equals("/usr/article/list")) {
         System.out.println("== 게시물 리스트 ==");
         System.out.println("-------------------");
         System.out.println("번호 / 제목");
 
+        List<Article> sortedArticles = articles;
         boolean orderByIdDesc = true;
 
-        System.out.println(params.get("orderBy"));
-        System.out.println(params.containsKey("orderBy"));
-
-        if( params.containsKey("orderBy") && params.get("orderBy").equals("idAsc")) {
+        if (params.containsKey("orderBy") && params.get("orderBy").equals("idAsc")) {
           orderByIdDesc = false;
         }
 
-        if ( orderByIdDesc ) {
-          for ( int i = articles.size() - 1; i >= 0; i-- ) {
-            Article article = articles.get(i);
-            System.out.printf("%d / %s\n", article.id, article.title);
-          }
-        }
-        else {
-          for ( Article article : articles ) {
-            System.out.printf("%d / %s\n", article.id, article.title);
-          }
+        if (orderByIdDesc) {
+          sortedArticles = Util.reverseList(sortedArticles);
         }
 
+        for (Article article : sortedArticles) {
+          System.out.printf("%d / %s\n", article.id, article.title);
+        }
 
 
         System.out.println("-------------------");
@@ -67,19 +61,19 @@ public class Main {
 
         try {
           id = Integer.parseInt(params.get("id"));
-        } catch ( NumberFormatException e ) {
+        } catch (NumberFormatException e) {
           System.out.println("id를 정수 형태로 입력해주세요.");
           continue;
         }
 
-        if( params.containsKey("id") == false ) {
+        if (params.containsKey("id") == false) {
           System.out.println("id를 입력해주세요.");
           continue;
         }
 
         Article article = articles.get(id - 1);
 
-        if ( id > articles.size()) {
+        if (id > articles.size()) {
           System.out.println("게시물이 존재하지 않습니다.");
           continue;
         }
@@ -89,7 +83,7 @@ public class Main {
         System.out.printf("제목 : %s\n", article.title);
         System.out.printf("내용 : %s\n", article.body);
 
-      } else if(rq.getUrlPath().equals("/usr/article/write")) {
+      } else if (rq.getUrlPath().equals("/usr/article/write")) {
         System.out.println("== 게시물 등록 ==");
         System.out.printf("제목 : ");
         String title = sc.nextLine();
@@ -105,8 +99,7 @@ public class Main {
         System.out.println("생성된  게시물 객체 : " + article);
         System.out.printf("%d번 게시물이 등록되었습니다.\n", article.id);
 
-      }
-      else {
+      } else {
         System.out.printf("입력 된 명령어 : %s\n", cmd);
       }
 
@@ -157,19 +150,20 @@ class Rq {
     return urlPath;
   }
 }
+
 class Util {
   public static Map<String, String> getParamsFromUrl(String url) {
     Map<String, String> params = new HashMap<>();
     String[] urlBits = url.split("\\?", 2);
 
-    if ( urlBits.length == 1) {
+    if (urlBits.length == 1) {
       return params;
     }
 
-    for( String bit : urlBits[1].split("&")) {
+    for (String bit : urlBits[1].split("&")) {
       String[] bitBits = bit.split("=", 2);
 
-      if ( bitBits.length == 1) {
+      if (bitBits.length == 1) {
         continue;
       }
 
@@ -182,4 +176,15 @@ class Util {
   public static String getUrlPathFromUrl(String url) {
     return url.split("\\?", 2)[0];
   }
+
+  // 이 함수는 원본리스트를 훼손하지 않고, 새 리스트를 만듭니다. 즉 정렬이 반대인 복사본리스트를 만들어서 반환합니다.
+  public static <T> List<T> reverseList(List<T> list) {
+    List<T> reverse = new ArrayList<>(list.size());
+
+    for (int i = list.size() - 1; i >= 0; i--) {
+      reverse.add(list.get(i));
+    }
+    return reverse;
+  }
+
 }
