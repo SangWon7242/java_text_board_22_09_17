@@ -44,7 +44,20 @@ public class Main {
 
         System.out.println("-------------------");
       } else if (rq.getUrlPath().equals("/usr/article/detail")) {
-        int id = Integer.parseInt(params.get("id"));
+
+        int id = 0;
+
+        try {
+          id = Integer.parseInt(params.get("id"));
+        } catch ( NumberFormatException e ) {
+          System.out.println("id를 정수 형태로 입력해주세요.");
+          continue;
+        }
+
+        if( params.containsKey("id") == false ) {
+          System.out.println("id를 입력해주세요.");
+          continue;
+        }
 
         Article article = articles.get(id - 1);
 
@@ -106,7 +119,6 @@ class Article {
     return String.format("{id: %d, title: \"%s\", body: \"%s\"}", id, title, body);
   }
 }
-
 
 class Rq {
   String url;
