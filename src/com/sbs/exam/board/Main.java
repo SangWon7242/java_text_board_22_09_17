@@ -40,6 +40,7 @@ public class Main {
         actionUsrArticleDetail(rq, articles);
       } else if (rq.getUrlPath().equals("/usr/article/write")) {
         actionUsrArticleWrite(articles, sc, articleLastId);
+        articleLastId++;
       } else {
         System.out.printf("입력 된 명령어 : %s\n", cmd);
       }
