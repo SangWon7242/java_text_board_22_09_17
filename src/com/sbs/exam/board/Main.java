@@ -219,77 +219,8 @@ public class Main {
 
 }
 
-class Article {
-  int id;
-  String title;
-  String body;
 
-  Article(int id, String title, String body) {
-    this.id = id;
-    this.title = title;
-    this.body = body;
-  }
 
-  @Override
-  public String toString() {
-    return String.format("{id: %d, title: \"%s\", body: \"%s\"}", id, title, body);
-  }
-}
 
-class Rq {
-  String url;
-  Map<String, String> params;
-  String urlPath;
 
-  Rq(String url) {
-    this.url = url;
-    params = Util.getParamsFromUrl(url);
-    urlPath = Util.getUrlPathFromUrl(url);
-  }
 
-  public Map<String, String> getParams() {
-    return params;
-  }
-
-  public String getUrlPath() {
-    return urlPath;
-  }
-}
-
-class Util {
-  public static Map<String, String> getParamsFromUrl(String url) {
-    Map<String, String> params = new HashMap<>();
-    String[] urlBits = url.split("\\?", 2);
-
-    if (urlBits.length == 1) {
-      return params;
-    }
-
-    for (String bit : urlBits[1].split("&")) {
-      String[] bitBits = bit.split("=", 2);
-
-      if (bitBits.length == 1) {
-        continue;
-      }
-
-      params.put(bitBits[0], bitBits[1]);
-    }
-
-    return params;
-  }
-
-  public static String getUrlPathFromUrl(String url) {
-    return url.split("\\?", 2)[0];
-  }
-
-  // 이 함수는 원본리스트를 훼손하지 않고, 새 리스트를 만듭니다. 즉 정렬이 반대인 복사본리스트를 만들어서 반환합니다.
-  public static <T> List<T> reverseList(List<T> list) {
-    List<T> reverse = new ArrayList<>(list.size());
-
-    for (int i = list.size() - 1; i >= 0; i--) {
-      reverse.add(list.get(i));
-    }
-    return reverse;
-  }
-
-}
