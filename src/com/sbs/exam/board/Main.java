@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Main {
   static void makeTestData(List<Article> articles) {
-    for ( int i = 0; i < 100; i++ ) {
+    for (int i = 0; i < 100; i++) {
       int id = i + 1;
       articles.add(new Article(id, "제목" + id, "내용" + id));
     }
@@ -37,33 +37,7 @@ public class Main {
       } else if (rq.getUrlPath().equals("/usr/article/list")) {
         actionUsrArticleList(rq, articles);
       } else if (rq.getUrlPath().equals("/usr/article/detail")) {
-
-        int id = 0;
-
-        try {
-          id = Integer.parseInt(params.get("id"));
-        } catch (NumberFormatException e) {
-          System.out.println("id를 정수 형태로 입력해주세요.");
-          continue;
-        }
-
-        if (params.containsKey("id") == false) {
-          System.out.println("id를 입력해주세요.");
-          continue;
-        }
-
-        Article article = articles.get(id - 1);
-
-        if (id > articles.size()) {
-          System.out.println("게시물이 존재하지 않습니다.");
-          continue;
-        }
-
-        System.out.println("== 게시물 상세내용 ==");
-        System.out.printf("번호 : %d\n", article.id);
-        System.out.printf("제목 : %s\n", article.title);
-        System.out.printf("내용 : %s\n", article.body);
-
+        actionUsrArticleDetail(rq, articles);
       } else if (rq.getUrlPath().equals("/usr/article/write")) {
         System.out.println("== 게시물 등록 ==");
         System.out.printf("제목 : ");
@@ -92,25 +66,56 @@ public class Main {
 
   }
 
+  private static void actionUsrArticleDetail(Rq rq, List<Article> articles) {
+    Map<String, String> params = rq.getParams();
+
+    int id = 0;
+
+    try {
+      id = Integer.parseInt(params.get("id"));
+    } catch (NumberFormatException e) {
+      System.out.println("id를 정수 형태로 입력해주세요.");
+      return;
+    }
+
+    if (params.containsKey("id") == false) {
+      System.out.println("id를 입력해주세요.");
+      return;
+    }
+
+    Article article = articles.get(id - 1);
+
+    if (id > articles.size()) {
+      System.out.println("게시물이 존재하지 않습니다.");
+      return;
+    }
+
+    System.out.println("== 게시물 상세내용 ==");
+    System.out.printf("번호 : %d\n", article.id);
+    System.out.printf("제목 : %s\n", article.title);
+    System.out.printf("내용 : %s\n", article.body);
+  }
+
   private static void actionUsrArticleList(Rq rq, List<Article> articles) {
     System.out.println("== 게시물 리스트 ==");
     System.out.println("-------------------");
     System.out.println("번호 / 제목");
+    System.out.println("-------------------");
 
     Map<String, String> params = rq.getParams();
 
     // 검색시작
     List<Article> filteredArticles = articles;
 
-    if ( params.containsKey("searchKeyword") ) {
+    if (params.containsKey("searchKeyword")) {
       String searchKeyword = params.get("searchKeyword");
 
       filteredArticles = new ArrayList<>();
 
-      for ( Article article : articles ) {
+      for (Article article : articles) {
         boolean matched = article.title.contains(searchKeyword) || article.body.contains(searchKeyword);
 
-        if ( matched ) {
+        if (matched) {
           filteredArticles.add(article);
         }
       }
@@ -130,9 +135,6 @@ public class Main {
     for (Article article : sortedArticles) {
       System.out.printf("%d / %s\n", article.id, article.title);
     }
-
-
-    System.out.println("-------------------");
   }
 
 
