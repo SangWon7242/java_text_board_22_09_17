@@ -25,7 +25,7 @@ public class App {
 
       String cmd = Container.sc.nextLine();
 
-      Rq rq = new Rq(cmd);
+      com.sbs.exam.board.Rq rq = new com.sbs.exam.board.Rq(cmd);
       Map<String, String> params = rq.getParams();
 
       if (rq.getUrlPath().equals("exit")) {
